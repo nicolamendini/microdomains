@@ -1,4 +1,4 @@
-# Self-organisation of functional cortical maps without detectable macroscopic spatial patterning — Preprint
+# Self-organisation of functional cortical maps without macroscopic spatial patterning — Preprint
 
 Preprint by Nicola Mendini and Stuart P. Wilson.
 
