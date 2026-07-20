@@ -15,10 +15,12 @@ The folder contains all presentation assets and compact external-analysis data:
 
 - `demo_assets/microdomain/`: the model-architecture figure and GitHub-visible
   PNG/GIF results;
-- `data/cellular_orientation_displacement/`: the public Chen et al. macaque V1
-  files and displacement summaries;
+- `data/cellular_orientation_displacement/`: baseline orientation-map files
+  from the public [Chen et al. macaque V1 dataset](https://doi.org/10.5281/zenodo.20053907)
+  and the derived displacement summaries;
 - `data/umap/`: copied topographic/salt-and-pepper response tensors and the
-  compact four-panel UMAP cache, using Stringer recording 1 only.
+  compact four-panel UMAP cache, using high-arousal trials from
+  [Stringer recording 1](https://doi.org/10.25378/janelia.8279387.v3) only.
 
 The multi-gigabyte trained snapshot archive and natural-image corpus remain in
 the repository-level `data_l4/` and `input_stimuli/` directories rather than

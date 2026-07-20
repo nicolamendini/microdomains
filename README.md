@@ -115,26 +115,52 @@ to nearly the same answer.
 
 ### 5. Shake the seating plan 🌀
 
-A mean displacement of only two model locations preserves short-range
-clustering but erases the fine global periodicity. Nothing about the learned
-responses has changed; only the neurons' chairs have moved. The orderly map
-has gone undercover as salt-and-pepper cortex.
+**Experiment 1 — a controlled shuffle.** After learning is complete, we move
+each model neuron with a one-to-one, seeded Gaussian permutation whose mean
+displacement is two lattice locations. The receptive fields and orientation
+preferences do not change; only their cortical addresses do. This modest
+shuffle preserves short-range clustering—consistent with cellular-scale V1
+measurements ([Ringach et al., 2016](https://doi.org/10.1038/ncomms12270))—but
+erases the global Fourier signature. The orderly map has gone undercover as
+salt-and-pepper cortex.
 
 <p align="center">
   <img src="./demo_microdomains/demo_assets/microdomain/scattered_learning.gif" width="100%" alt="Animation of the locally scattered orientation map">
 </p>
 
-How plausible is that amount of chair-moving? We cannot rewind cortical
-development, but dense macaque V1 recordings offer a clue. We compare each
-measured soma with the nearest location where a smooth underlying map predicts
-the same orientation.
+**Experiment 2 — an estimate from real cortex.** We cannot rewind cortical
+development, but dense two-photon recordings from superficial V1 in two awake,
+fixating macaques offer a clue. The source experiment sampled two 850 × 850 µm
+fields per animal with gratings at 12 axial orientations, spaced by 15°. We
+chose these data because the unusually dense spatial sampling and many tested
+orientations give a much less discretised view of the map than the smaller
+orientation sets often used in physiology. We retain all 12 orientations and
+the significantly tuned cells rather than coarsening them into bins. See
+[Chen et al. (2026)](https://doi.org/10.7554/eLife.107518) and the
+[source dataset](https://doi.org/10.5281/zenodo.20053907).
+
+For each of the three densest fields, we smooth axial orientation preferences
+in complex form, using a 100 µm spatial scale and leave-one-out prediction at
+each soma. We then measure the shortest exact distance to the contour on which
+that smooth map predicts the neuron's preferred orientation. Points beyond
+350 µm remain visible in the scatter but are excluded from the displayed means
+and correspondence links. This is a model-based displacement proxy—not a
+literal measurement of neurons migrating during development.
 
 <p align="center">
-  <img src="./demo_microdomains/demo_assets/microdomain/macaque_displacement_summary.png" width="100%" alt="Macaque V1 cellular measurements and smoothed orientation maps">
+  <img src="./demo_microdomains/demo_assets/microdomain/macaque_displacement_summary.png" width="90%" alt="Macaque V1 cellular measurements and smoothed orientation maps">
 </p>
 
+The first figure shows the population-level estimate: measured cellular maps,
+their smooth inferred counterparts, and the resulting displacement
+distributions. The second makes the geometry tangible for 20 fixed example
+neurons per field. Each coloured dot is a soma, its black × is the closest
+same-orientation point on the inferred map, and the connecting segment is the
+estimated displacement. These links visualise the calculation; they should not
+be read as reconstructed developmental trajectories.
+
 <p align="center">
-  <img src="./demo_microdomains/demo_assets/microdomain/macaque_displacement_links.png" width="100%" alt="Example macaque soma-to-map orientation correspondences">
+  <img src="./demo_microdomains/demo_assets/microdomain/macaque_displacement_links.png" width="90%" alt="Example macaque soma-to-map orientation correspondences">
 </p>
 
 ### 6. Leave the sheet and find the hidden shape ✨
@@ -144,6 +170,11 @@ the learned responses. Rotating UMAPs of gratings, topographic-model activity,
 salt-and-pepper-model activity, and high-arousal mouse V1 data bring the order
 back into view as smooth, folded response geometries. The map may disappear
 from cortical space while its shape survives in the code.
+
+The mouse comparison uses the 1,916 high-arousal trials from recording 1 of the
+[Stringer et al. public dataset](https://doi.org/10.25378/janelia.8279387.v3)
+([paper](https://doi.org/10.1038/s41586-019-1346-5)). Colours are fixed to each
+sample before rotation, so the animation changes the viewpoint—not the labels.
 
 <p align="center">
   <img src="./demo_microdomains/demo_assets/microdomain/rotating_umap.gif" width="100%" alt="Rotating four-panel UMAP comparison">

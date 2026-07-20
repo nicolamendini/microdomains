@@ -1305,15 +1305,17 @@ def animate_rotating_umap_grid(
     for axis, panel, title in zip(axes, panels, display_titles):
         embedding = np.asarray(panel["embedding"], dtype=float)
         angles = np.asarray(panel["angles"], dtype=float) % 180
+        # Materialise one opaque RGBA value per point.  Semi-transparent 3D
+        # markers are re-sorted as the camera rotates, which makes overlapping
+        # colours appear to shimmer even when the data and labels are fixed.
+        point_colours = colormap(normalization(angles))
+        point_colours[:, 3] = 1.0
         axis.scatter(
             embedding[:, 0],
             embedding[:, 1],
             embedding[:, 2],
-            c=angles,
-            cmap=colormap,
-            norm=normalization,
+            c=point_colours,
             s=4.0,
-            alpha=0.76,
             linewidths=0,
             depthshade=False,
             rasterized=True,
@@ -1381,13 +1383,66 @@ def save_animation(
     path: str | Path,
     fps: float = 3.0,
     dpi: int = 80,
+    stable_palette: bool = False,
 ) -> Path:
     """Save a compact GIF that remains visible in GitHub's notebook renderer."""
 
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     result.save(path, writer=animation.PillowWriter(fps=fps), dpi=dpi)
+    if stable_palette:
+        _stabilize_gif_palette(path)
     return path
+
+
+def _stabilize_gif_palette(path: str | Path) -> None:
+    """Re-encode a GIF with one shared palette to prevent frame-wise shimmer."""
+
+    from PIL import Image
+
+    path = Path(path)
+    with Image.open(path) as source:
+        default_duration = int(source.info.get("duration", 100))
+        frames = []
+        durations = []
+        for frame_index in range(source.n_frames):
+            source.seek(frame_index)
+            frames.append(source.convert("RGB").copy())
+            durations.append(int(source.info.get("duration", default_duration)))
+
+    width, height = frames[0].size
+    thumbnail_size = (max(1, width // 4), max(1, height // 4))
+    columns = min(8, len(frames))
+    rows = int(math.ceil(len(frames) / columns))
+    atlas = Image.new(
+        "RGB",
+        (thumbnail_size[0] * columns, thumbnail_size[1] * rows),
+        "white",
+    )
+    for index, frame in enumerate(frames):
+        thumbnail = frame.resize(thumbnail_size, Image.Resampling.LANCZOS)
+        atlas.paste(
+            thumbnail,
+            ((index % columns) * thumbnail_size[0], (index // columns) * thumbnail_size[1]),
+        )
+    shared_palette = atlas.quantize(
+        colors=256,
+        method=Image.Quantize.MEDIANCUT,
+        dither=Image.Dither.NONE,
+    )
+    quantized = [
+        frame.quantize(palette=shared_palette, dither=Image.Dither.NONE)
+        for frame in frames
+    ]
+    quantized[0].save(
+        path,
+        save_all=True,
+        append_images=quantized[1:],
+        duration=durations,
+        loop=0,
+        disposal=2,
+        optimize=False,
+    )
 
 
 def render_github_assets(
@@ -1453,6 +1508,7 @@ def render_github_assets(
             output_dir / f"{name}.gif",
             fps=6.0 if name == "rotating_umap" else fps,
             dpi=dpi,
+            stable_palette=name == "rotating_umap",
         )
     return paths
 

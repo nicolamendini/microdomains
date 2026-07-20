@@ -713,23 +713,38 @@ def plot_cellular_map_analysis(
 def plot_fixed_sigma_summary(
     results: Sequence[MapAnalysis],
     figure_path: str | Path | None = None,
-    dpi: int = 160,
-    font_size: float = 16.0,
+    dpi: int = 120,
+    font_size: float = 14.0,
 ) -> plt.Figure:
     """Plot cellular scatters above their common-bandwidth smooth maps."""
 
     if not results:
         raise ValueError("results is empty")
-    figure, axes = plt.subplots(
-        2,
-        len(results),
-        figsize=(README_PANEL_WIDTH * len(results), README_TWO_ROW_HEIGHT),
-        squeeze=False,
-        constrained_layout=True,
+    n_columns = len(results)
+    figure = plt.figure(
+        figsize=(README_PANEL_WIDTH * n_columns, 9.2),
+        constrained_layout=False,
     )
+    grid = figure.add_gridspec(
+        2,
+        n_columns + 1,
+        width_ratios=(*([1.0] * n_columns), 0.045),
+        left=0.055,
+        right=0.94,
+        bottom=0.075,
+        top=0.91,
+        wspace=0.10,
+        hspace=0.20,
+    )
+    axes = np.asarray(
+        [
+            [figure.add_subplot(grid[row, column]) for column in range(n_columns)]
+            for row in range(2)
+        ]
+    )
+    colorbar_axis = figure.add_subplot(grid[:, -1])
     colormap = plt.get_cmap("hsv")
     normalization = plt.Normalize(0.0, 180.0)
-    last_image = None
     for column, result in enumerate(results):
         cellular_map = result.cellular_map
         scatter_axis, smooth_axis = axes[:, column]
@@ -739,10 +754,10 @@ def plot_fixed_sigma_summary(
             c=cellular_map.orientation_deg,
             cmap=colormap,
             norm=normalization,
-            s=18,
+            s=14,
             linewidths=0,
         )
-        last_image = smooth_axis.imshow(
+        smooth_axis.imshow(
             result.smoothed_orientation_deg,
             origin="lower",
             extent=(0.0, FOV_SIZE_UM, 0.0, FOV_SIZE_UM),
@@ -752,40 +767,35 @@ def plot_fixed_sigma_summary(
             rasterized=True,
         )
         scatter_axis.set_title(
-            f"{cellular_map.name} cellular measurements · n={len(cellular_map.xy_um)}"
+            f"{cellular_map.name} · measured cells (n={len(cellular_map.xy_um)})"
         )
         smooth_axis.set_title(
-            f"Gaussian smooth · σ={result.sigma_um:g} µm\n"
-            f"mean displacement={result.mean_displacement_um:.1f} µm"
+            f"σ={result.sigma_um:g} µm smooth · mean d={result.mean_displacement_um:.1f} µm"
         )
         for axis in (scatter_axis, smooth_axis):
             axis.set_xlim(0.0, FOV_SIZE_UM)
             axis.set_ylim(0.0, FOV_SIZE_UM)
             axis.set_aspect("equal")
-            axis.set_xlabel("x (µm)")
-            axis.set_ylabel("y (µm)")
             axis.tick_params(labelsize=font_size - 2)
             axis.title.set_fontsize(font_size)
-            axis.xaxis.label.set_fontsize(font_size)
-            axis.yaxis.label.set_fontsize(font_size)
-    if last_image is not None:
-        colorbar = figure.colorbar(
-            plt.cm.ScalarMappable(norm=normalization, cmap=colormap),
-            ax=axes,
-            ticks=(0, 45, 90, 135, 180),
-            shrink=0.82,
-            pad=0.02,
-        )
-        colorbar.set_label("preferred orientation (degrees; axial)", fontsize=font_size)
-        colorbar.ax.tick_params(labelsize=font_size - 2)
+    colorbar = figure.colorbar(
+        plt.cm.ScalarMappable(norm=normalization, cmap=colormap),
+        cax=colorbar_axis,
+        ticks=(0, 45, 90, 135, 180),
+    )
+    colorbar.set_label("preferred orientation (degrees; axial)", fontsize=font_size)
+    colorbar.ax.tick_params(labelsize=font_size - 2)
+    figure.supxlabel("cortical x-position (µm)", fontsize=font_size, y=0.015)
+    figure.supylabel("cortical y-position (µm)", fontsize=font_size, x=0.012)
     figure.suptitle(
         "Macaque V1 cellular orientation displacement",
-        fontsize=font_size + 2,
+        fontsize=font_size + 4,
+        y=0.985,
     )
     if figure_path is not None:
         figure_path = Path(figure_path)
         figure_path.parent.mkdir(parents=True, exist_ok=True)
-        figure.savefig(figure_path, dpi=dpi, bbox_inches="tight", facecolor="white")
+        figure.savefig(figure_path, dpi=dpi, facecolor="white")
     return figure
 
 
@@ -796,8 +806,8 @@ def plot_sparse_displacement_links(
     map_alpha: float = 0.28,
     point_alpha: float = 0.78,
     figure_path: str | Path | None = None,
-    dpi: int = 160,
-    font_size: float = 16.0,
+    dpi: int = 120,
+    font_size: float = 14.0,
 ) -> plt.Figure:
     """Show sparse soma-to-matched-contour links over faint smooth maps."""
 
@@ -807,21 +817,31 @@ def plot_sparse_displacement_links(
         raise ValueError("n_links must be positive")
     if not 0 <= map_alpha <= 1 or not 0 <= point_alpha <= 1:
         raise ValueError("map_alpha and point_alpha must lie in [0, 1]")
-    figure, axes = plt.subplots(
-        1,
-        len(results),
-        figsize=(README_PANEL_WIDTH * len(results), README_ROW_HEIGHT),
-        squeeze=False,
-        constrained_layout=True,
+    n_columns = len(results)
+    figure = plt.figure(
+        figsize=(README_PANEL_WIDTH * n_columns, README_ROW_HEIGHT),
+        constrained_layout=False,
     )
-    axes = axes[0]
+    grid = figure.add_gridspec(
+        1,
+        n_columns + 1,
+        width_ratios=(*([1.0] * n_columns), 0.045),
+        left=0.055,
+        right=0.94,
+        bottom=0.15,
+        top=0.78,
+        wspace=0.10,
+    )
+    axes = np.asarray(
+        [figure.add_subplot(grid[0, column]) for column in range(n_columns)]
+    )
+    colorbar_axis = figure.add_subplot(grid[0, -1])
     colormap = plt.get_cmap("hsv")
     normalization = plt.Normalize(0.0, 180.0)
     generator = np.random.default_rng(seed)
-    last_image = None
     for column, (axis, result) in enumerate(zip(axes, results)):
         cellular_map = result.cellular_map
-        last_image = axis.imshow(
+        axis.imshow(
             result.smoothed_orientation_deg,
             origin="lower",
             extent=(0.0, FOV_SIZE_UM, 0.0, FOV_SIZE_UM),
@@ -871,36 +891,32 @@ def plot_sparse_displacement_links(
             zorder=4,
         )
         axis.set_title(
-            f"{cellular_map.name} · {len(chosen)} example displacements\n"
-            f"included-cell mean={result.mean_displacement_um:.1f} µm"
+            f"{cellular_map.name} · {len(chosen)} examples · "
+            f"mean d={result.mean_displacement_um:.1f} µm"
         )
         axis.set_xlim(0.0, FOV_SIZE_UM)
         axis.set_ylim(0.0, FOV_SIZE_UM)
         axis.set_aspect("equal")
-        axis.set_xlabel("x (µm)")
-        axis.set_ylabel("y (µm)")
         axis.tick_params(labelsize=font_size - 2)
         axis.title.set_fontsize(font_size)
-        axis.xaxis.label.set_fontsize(font_size)
-        axis.yaxis.label.set_fontsize(font_size)
-    if last_image is not None:
-        colorbar = figure.colorbar(
-            plt.cm.ScalarMappable(norm=normalization, cmap=colormap),
-            ax=axes,
-            ticks=(0, 45, 90, 135, 180),
-            shrink=0.78,
-            pad=0.02,
-        )
-        colorbar.set_label("preferred orientation (degrees; axial)", fontsize=font_size)
-        colorbar.ax.tick_params(labelsize=font_size - 2)
+    colorbar = figure.colorbar(
+        plt.cm.ScalarMappable(norm=normalization, cmap=colormap),
+        cax=colorbar_axis,
+        ticks=(0, 45, 90, 135, 180),
+    )
+    colorbar.set_label("preferred orientation (degrees; axial)", fontsize=font_size)
+    colorbar.ax.tick_params(labelsize=font_size - 2)
+    figure.supxlabel("cortical x-position (µm)", fontsize=font_size, y=0.035)
+    figure.supylabel("cortical y-position (µm)", fontsize=font_size, x=0.012)
     figure.suptitle(
         "Example soma-to-map displacement correspondences",
-        fontsize=font_size + 2,
+        fontsize=font_size + 4,
+        y=0.98,
     )
     if figure_path is not None:
         figure_path = Path(figure_path)
         figure_path.parent.mkdir(parents=True, exist_ok=True)
-        figure.savefig(figure_path, dpi=dpi, bbox_inches="tight", facecolor="white")
+        figure.savefig(figure_path, dpi=dpi, facecolor="white")
     return figure
 
 
