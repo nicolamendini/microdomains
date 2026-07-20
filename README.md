@@ -157,7 +157,7 @@ point in exactly the same direction, and falls as noise changes the response.
 each model neuron with a one-to-one, seeded Gaussian permutation whose mean
 displacement is two lattice locations. The receptive fields and orientation
 preferences do not change; only their cortical addresses do. This modest
-shuffle preserves short-range clustering—consistent with cellular-scale V1
+shuffle (2 model units, corresponding to approximately 50µm) preserves short-range clustering—consistent with cellular-scale V1
 measurements ([Ringach et al., 2016](https://doi.org/10.1038/ncomms12270))—but
 erases the global Fourier signature. The orderly map has gone undercover as
 salt-and-pepper cortex.
