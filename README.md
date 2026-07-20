@@ -22,7 +22,47 @@ a collapsible block, so it can be read as either a visual story or a
 reproducible modelling workflow. Reusable collection and plotting code lives
 in the accompanying [`demo_microdomains`](./demo_microdomains/) folder.
 
-### 1. Give the cortex something to look at 👀
+### 1. Meet micro-GCAL: local competition, distant cooperation
+
+Before the learning begins, Figure 4 introduces the model itself. Read it from
+the bottom up: a visual stimulus is converted into sparse, contrast-normalised
+activity in the **LGN**, which projects to a recurrent sheet representing
+**V1 layer 4**. This is the only cortical layer simulated in this demo, so the
+rest of the text simply calls it **V1** or **cortex**.
+
+<p align="center">
+  <img src="./demo_microdomains/demo_assets/microdomain/micro_gcal_architecture.png" width="65%" alt="Micro-GCAL architecture with LGN input, a recurrent V1 sheet, short-range excitation, longer-range inhibition, and cross-domain excitation">
+</p>
+
+Each cortical neuron combines four inputs:
+
+- **Afferent input** from a small local LGN patch. Plastic afferent weights
+  become the neuron's visual receptive field.
+- **Short-range excitation (SRE)** from its nearest cortical neighbours. It
+  lets nearby co-active neurons reinforce one another and settle as a local
+  patch.
+- **Longer-range inhibition (LRI)** from a wider surround. It creates
+  competition, separates neighbouring patches, and prevents activity from
+  spreading across the whole sheet.
+- **Cross-domain excitation (CDE)** at the widest scale. CDE is not a uniform
+  excitatory halo: it is learned selectively between neurons that are
+  repeatedly strongly co-active, allowing separated but functionally related
+  patches to cooperate.
+
+Their spatial ordering is **SRE < LRI < CDE**: local cooperation, broader
+competition, then selective cooperation again at the longest scale. The first
+two interactions keep individual domains small; CDE connects them with learned
+bridges and stabilises their recurrent responses. The result is **many tiny,
+coupled domains**—not one large smooth domain, and not a collection of
+independent random neurons. 🏝️
+
+For every stimulus, activity is updated recurrently until it settles. Hebbian
+plasticity then strengthens co-active afferent and recurrent connections,
+while adaptive thresholds and gain control keep activity sparse and balance
+feedforward with recurrent drive. Repeating this settle–learn cycle jointly
+shapes receptive fields, connectivity, and the cortical map.
+
+### 2. Give the cortex something to look at 👀
 
 Natural-image patches pass through an LGN-like contrast filter and gain
 control. V1 receives sparse edges and textures, with no orientation labels and
@@ -32,7 +72,7 @@ no hidden answer sheet. It has to work out the useful structure for itself.
   <img src="./demo_microdomains/demo_assets/microdomain/lgn_inputs.png" width="100%" alt="Natural-image LGN inputs and summary statistics">
 </p>
 
-### 2. Let the neurons negotiate
+### 3. Let the neurons negotiate
 
 Each input starts a brief recurrent conversation: excite, inhibit, settle,
 learn, repeat. Tiny orientation domains gradually appear. The Fourier ring
@@ -51,7 +91,7 @@ small, but they are already exchanging phone numbers.
   <img src="./demo_microdomains/demo_assets/microdomain/weight_learning.gif" width="70%" alt="Animation of afferent and lateral plasticity">
 </p>
 
-### 3. Can it remember a face? 🙂
+### 4. Can it remember a face? 🙂
 
 A fixed synthetic face makes reconstruction progress easy to see. The new
 final panel keeps our cheerful volunteer honest by tracking average fidelity
@@ -77,7 +117,7 @@ to nearly the same answer.
   <img src="./demo_microdomains/demo_assets/microdomain/robustness.gif" width="100%" alt="Animation of response robustness to noise">
 </p>
 
-### 4. Shake the seating plan 🌀
+### 5. Shake the seating plan 🌀
 
 A mean displacement of only two model locations preserves short-range
 clustering but erases the fine global periodicity. Nothing about the learned
@@ -101,7 +141,7 @@ the same orientation.
   <img src="./demo_microdomains/demo_assets/microdomain/macaque_displacement_links.png" width="100%" alt="Example macaque soma-to-map orientation correspondences">
 </p>
 
-### 5. Leave the sheet and find the hidden shape ✨
+### 6. Leave the sheet and find the hidden shape ✨
 
 Displacement hides structure on the cortical sheet, but it does not scramble
 the learned responses. Rotating UMAPs of gratings, topographic-model activity,

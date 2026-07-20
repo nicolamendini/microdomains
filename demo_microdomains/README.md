@@ -13,7 +13,8 @@ CUDA-capable PyTorch environment.
 
 The folder contains all presentation assets and compact external-analysis data:
 
-- `demo_assets/microdomain/`: GitHub-visible PNG and GIF results;
+- `demo_assets/microdomain/`: the model-architecture figure and GitHub-visible
+  PNG/GIF results;
 - `data/cellular_orientation_displacement/`: the public Chen et al. macaque V1
   files and displacement summaries;
 - `data/umap/`: copied topographic/salt-and-pepper response tensors and the

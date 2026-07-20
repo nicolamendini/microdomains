@@ -971,10 +971,10 @@ def animate_dimensionality_learning(
         ratio = v1_dim[frame_index] / max(1, lgn_dim)
         axis.text(
             0.97,
-            0.82,
+            0.08,
             f"V1/LGN={ratio:.2f}\nV1 $d_{{95}}$={v1_dim[frame_index]}\nLGN $d_{{95}}$={lgn_dim}",
             ha="right",
-            va="top",
+            va="bottom",
             transform=axis.transAxes,
             fontsize=DEMO_FONT_SIZE,
         )
