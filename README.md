@@ -11,9 +11,7 @@ This study uses a self-organising model of cortical map development to show how 
 The [complete demo notebook](./demo_microdomains/github_self_organisation_demo.ipynb)
 follows a 100 × 100 salt-and-pepper cortical sheet through two epochs of
 natural-image learning. It connects the model's local circuit plasticity to
-orientation-map formation, reconstruction, dimensionality, robustness, wiring
-efficiency, macaque V1 measurements, and response geometry. The notebook is
-kept deliberately short; its reusable collection and plotting code lives in
+orientation-map formation, reconstruction, dimensionality, robustness and response geometry. Reusable collection and plotting code lives in
 the accompanying [`demo_microdomains`](./demo_microdomains/) folder.
 
 ### Natural-image drive
@@ -44,7 +42,7 @@ cross-domain excitation.
 ### Reconstruction, dimensionality, and robustness
 
 A fixed synthetic face is evaluated—not interpolated—at every archived
-learning snapshot, showing the corresponding L4 response and decoder output.
+learning snapshot, showing the corresponding cortical response and decoder output.
 
 <p align="center">
   <img src="./demo_microdomains/demo_assets/microdomain/synthetic_learning.gif" width="85%" alt="Tracked synthetic-face activity and reconstruction">
@@ -64,7 +62,7 @@ every snapshot.
   <img src="./demo_microdomains/demo_assets/microdomain/robustness.gif" width="100%" alt="Animation of response robustness to noise">
 </p>
 
-### Wiring efficiency and cellular-scale map structure
+### Cellular-scale map structure and local displacement
 
 A seeded local permutation tests how small anatomical displacements can hide
 macroscopic orientation order while retaining local functional structure.
@@ -95,7 +93,4 @@ experimental recording.
   <img src="./demo_microdomains/demo_assets/microdomain/rotating_umap.gif" width="100%" alt="Rotating four-panel UMAP comparison">
 </p>
 
-The large trained snapshot archive and natural-image corpus are intentionally
-not duplicated in this repository. The folder includes the presentation
-assets, compact external-analysis data, notebook, and all demo-specific source
-code needed to inspect how the results were produced.
+Hope you enjoyed this!
