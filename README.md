@@ -16,6 +16,19 @@ epochs of natural-image learning. The model builds an orderly fabric of tiny,
 interconnected domains; modest neuronal displacement then makes that structure
 look random without destroying what the network learned.
 
+The feature we follow is **orientation preference**: which edge angle makes a
+V1 neuron respond most strongly. In a smooth orientation map, nearby neurons
+prefer similar angles; in a salt-and-pepper map, different preferences appear
+intermixed at cellular scale. The puzzle is whether that apparently untidy
+arrangement can still grow from orderly learning rules.
+
+**Self-organisation** means that nobody supplies the finished map—not a
+supervisor, a label, or a built-in cortical blueprint. Each neuron responds to
+its own input, interacts with other neurons, and adjusts its connections using
+local activity. When those small steps are repeated many times, population-level
+structure can emerge by itself. This demo asks whether the same kind of process
+can produce structure that later *looks* random.
+
 Reusable collection and plotting code lives
 in the accompanying [`demo_microdomains`](./demo_microdomains/) folder.
 
@@ -33,7 +46,8 @@ activity in the **LGN**, which projects to a recurrent sheet representing
 Each cortical neuron combines four inputs:
 
 - **Afferent input** from a small local LGN patch. Plastic afferent weights
-  become the neuron's visual receptive field.
+  become the neuron's visual receptive field—the region and pattern in the
+  visual input that drive it.
 - **Short-range excitation (SRE)** from its nearest cortical neighbours. It
   lets nearby co-active neurons reinforce one another and settle as a local
   patch.
@@ -63,6 +77,8 @@ shapes receptive fields, connectivity, and the cortical map.
 Natural-image patches pass through an LGN-like contrast filter and gain
 control. V1 receives sparse edges and textures, with no orientation labels and
 no hidden answer sheet. It has to work out the useful structure for itself.
+The LGN is the relay between retina and cortex; here its simplified job is to
+emphasise local light–dark boundaries and normalise their contrast.
 
 <p align="center">
   <img src="./demo_microdomains/demo_assets/microdomain/lgn_inputs.png" width="100%" alt="Natural-image LGN inputs and summary statistics">
@@ -75,6 +91,13 @@ learn, repeat. Tiny orientation domains gradually appear. The Fourier ring
 reveals their preferred spacing, while the retinotopic fishnet bends locally
 without losing the global plot.
 
+Here is the visual key. In the orientation map, colour is preferred edge angle,
+so same-coloured neighbours form a domain. A ring in Fourier space means that
+similar features repeat at a characteristic distance in every direction. The
+retinotopy panels instead ask *where in the image does each cortical location
+look?* A globally ordered but locally bent grid means neighbouring regions of
+visual space are still represented nearby, despite fine-scale distortions.
+
 <p align="center">
   <img src="./demo_microdomains/demo_assets/microdomain/map_learning.gif" width="100%" alt="Animation of orientation-map and retinotopy formation">
 </p>
@@ -83,13 +106,21 @@ At the same time, afferent receptive fields become selective and cross-domain
 excitation learns which separated patches should cooperate. The domains are
 small, but they are already exchanging phone numbers.
 
+Each small tile is one neuron's incoming connection pattern. Bright, structured
+afferent tiles indicate selective visual receptive fields; bright patches in
+the CDE tiles show which more distant cortical partners have acquired strong
+excitatory links.
+
 <p align="center">
   <img src="./demo_microdomains/demo_assets/microdomain/weight_learning.gif" width="70%" alt="Animation of afferent and lateral plasticity">
 </p>
 
 ### 4. Can it remember a face? 🙂
 
-A fixed synthetic face makes reconstruction progress easy to see.
+A fixed synthetic face makes reconstruction progress easy to see. A decoder
+tries to rebuild the input using only the V1 population activity. The final
+curve averages reconstruction similarity over the full held-out set: higher
+cosine similarity means the cortical code preserves more of the input.
 
 <p align="center">
   <img src="./demo_microdomains/demo_assets/microdomain/synthetic_learning.gif" width="85%" alt="Tracked synthetic-face activity and reconstruction">
@@ -99,6 +130,11 @@ PCA then reveals that ten thousand neurons do not need ten thousand independent
 opinions. The V1 code uses fewer effective dimensions than its LGN input: a
 compact population representation, rather than a lossy shrug.
 
+In plain terms, PCA counts how many independent patterns are needed to describe
+most of the population's variation. If many neurons change together, many
+individual responses can be summarised by fewer shared patterns. The plot uses
+the number required to explain 95% of the variance.
+
 <p align="center">
   <img src="./demo_microdomains/demo_assets/microdomain/dimensionality.gif" width="100%" alt="Animation of PCA geometry and effective dimensionality">
 </p>
@@ -106,6 +142,10 @@ compact population representation, rather than a lossy shrug.
 Next we give the recurrent dynamics a noisy day ⚡. A matched perturbation at
 every snapshot shows that selective interaction helps the population return
 to nearly the same answer.
+
+The clean and noisy activity panels show the same cortical region responding
+to the same input. Their cosine similarity is 1 when the two population codes
+point in exactly the same direction, and falls as noise changes the response.
 
 <p align="center">
   <img src="./demo_microdomains/demo_assets/microdomain/robustness.gif" width="100%" alt="Animation of response robustness to noise">
@@ -167,6 +207,14 @@ the learned responses. Rotating UMAPs of gratings, topographic-model activity,
 salt-and-pepper-model activity, and high-arousal mouse V1 data bring the order
 back into view as smooth, folded response geometries. The map may disappear
 from cortical space while its shape survives in the code.
+
+Each dot is the activity of an entire population for one stimulus or trial;
+UMAP places dots nearby when those high-dimensional activity patterns are
+similar. Colour marks grating orientation. Smooth colour progressions around
+the folded shapes therefore reveal an ordered representation in neural
+activity—even when the neurons no longer form an obvious map on the sheet.
+From left to right, the panels provide a stimulus baseline, the topographic
+simulation, the salt-and-pepper simulation, and recorded mouse V1 activity.
 
 The mouse comparison uses the 1,916 high-arousal trials from recording 1 of the
 [Stringer et al. public dataset](https://doi.org/10.25378/janelia.8279387.v3)
