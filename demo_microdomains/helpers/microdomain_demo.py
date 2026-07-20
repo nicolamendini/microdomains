@@ -970,13 +970,20 @@ def animate_dimensionality_learning(
         axis.scatter(epochs[frame_index], v1_dim[frame_index], color="black", zorder=3)
         ratio = v1_dim[frame_index] / max(1, lgn_dim)
         axis.text(
-            0.97,
-            0.08,
+            0.98,
+            0.03,
             f"V1/LGN={ratio:.2f}\nV1 $d_{{95}}$={v1_dim[frame_index]}\nLGN $d_{{95}}$={lgn_dim}",
             ha="right",
             va="bottom",
             transform=axis.transAxes,
             fontsize=DEMO_FONT_SIZE,
+            bbox={
+                "boxstyle": "round,pad=0.2",
+                "facecolor": "white",
+                "edgecolor": "none",
+                "alpha": 0.92,
+            },
+            zorder=4,
         )
         axis.set_xlabel("training epoch")
         axis.set_ylabel("components for 95% variance")
