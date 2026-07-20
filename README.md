@@ -16,19 +16,15 @@ epochs of natural-image learning. The model builds an orderly fabric of tiny,
 interconnected domains; modest neuronal displacement then makes that structure
 look random without destroying what the network learned.
 
-The notebook develops this argument one step at a time. Every section starts
-with a short narrative and places the corresponding technical explanation in
-a collapsible block, so it can be read as either a visual story or a
-reproducible modelling workflow. Reusable collection and plotting code lives
+Reusable collection and plotting code lives
 in the accompanying [`demo_microdomains`](./demo_microdomains/) folder.
 
-### 1. Meet micro-GCAL: local competition, distant cooperation
+### 1. Meet micro-GCAL: local competition, distant cooperation 🤝
 
-Before the learning begins, Figure 4 introduces the model itself. Read it from
+Before the learning begins, let's introduce the model itself! Read it from
 the bottom up: a visual stimulus is converted into sparse, contrast-normalised
 activity in the **LGN**, which projects to a recurrent sheet representing
-**V1 layer 4**. This is the only cortical layer simulated in this demo, so the
-rest of the text simply calls it **V1** or **cortex**.
+**V1 layer 4**.
 
 <p align="center">
   <img src="./demo_microdomains/demo_assets/microdomain/micro_gcal_architecture.png" width="65%" alt="Micro-GCAL architecture with LGN input, a recurrent V1 sheet, short-range excitation, longer-range inhibition, and cross-domain excitation">
@@ -72,7 +68,7 @@ no hidden answer sheet. It has to work out the useful structure for itself.
   <img src="./demo_microdomains/demo_assets/microdomain/lgn_inputs.png" width="100%" alt="Natural-image LGN inputs and summary statistics">
 </p>
 
-### 3. Let the neurons negotiate
+### 3. Let the neurons negotiate 💡
 
 Each input starts a brief recurrent conversation: excite, inhibit, settle,
 learn, repeat. Tiny orientation domains gradually appear. The Fourier ring
@@ -153,7 +149,7 @@ from cortical space while its shape survives in the code.
   <img src="./demo_microdomains/demo_assets/microdomain/rotating_umap.gif" width="100%" alt="Rotating four-panel UMAP comparison">
 </p>
 
-### Take-home idea
+### Take-home idea 🏡
 
 Salt-and-pepper need not mean structureless. It may mean **beautifully
 organised, then very lightly shuffled**—with selective connectivity, robust
