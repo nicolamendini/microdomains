@@ -1,0 +1,4 @@
+fov,n_tuned_cells,n_exact_contours_found,smoothing_sigma_um,mean_displacement_um
+MB_1,844,792,100.0,91.42369723974906
+MB_2,771,729,100.0,82.52570508097655
+MA_2,419,395,100.0,92.31424965418583
