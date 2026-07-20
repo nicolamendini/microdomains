@@ -184,16 +184,21 @@ def _style_axis(axis: plt.Axes) -> None:
     axis.spines[["top", "right"]].set_visible(False)
 
 
-def _apply_demo_typography(fig: plt.Figure, axes: Iterable[plt.Axes]) -> None:
+def _apply_demo_typography(
+    fig: plt.Figure,
+    axes: Iterable[plt.Axes],
+    font_size: float = DEMO_FONT_SIZE,
+    suptitle_size: float = DEMO_SUPTITLE_SIZE,
+) -> None:
     """Use one readable type scale across every public-demo panel."""
 
     for axis in axes:
-        axis.title.set_fontsize(DEMO_FONT_SIZE)
-        axis.xaxis.label.set_fontsize(DEMO_FONT_SIZE)
-        axis.yaxis.label.set_fontsize(DEMO_FONT_SIZE)
-        axis.tick_params(labelsize=DEMO_FONT_SIZE - 2)
+        axis.title.set_fontsize(font_size)
+        axis.xaxis.label.set_fontsize(font_size)
+        axis.yaxis.label.set_fontsize(font_size)
+        axis.tick_params(labelsize=max(font_size - 2, 1))
     if fig._suptitle is not None:
-        fig._suptitle.set_fontsize(DEMO_SUPTITLE_SIZE)
+        fig._suptitle.set_fontsize(suptitle_size)
 
 
 def _white_zero_cmap(name: str = "magma") -> ListedColormap:
@@ -624,7 +629,9 @@ def animate_weight_learning(
         for axis in axes:
             _image_axis(axis)
         fig.suptitle(f"Weight learning · epoch {archive.epoch_at(frame):.2f}")
-        _apply_demo_typography(fig, fig.axes)
+        # This animation has half the canvas width of the four-panel rows, so
+        # use the matching compact type scale rather than crowding its titles.
+        _apply_demo_typography(fig, fig.axes, font_size=12, suptitle_size=14)
         return []
 
     result = animation.FuncAnimation(
