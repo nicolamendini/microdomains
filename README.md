@@ -6,7 +6,7 @@ This study uses a self-organising model of cortical map development to show how 
 
 [Read the preprint](./self_organisation_without_macroscopic_patterning_preprint.pdf)
 
-## Cortical microdomain self-organisation demo
+## Cortical microdomain self-organisation demo 🧠
 
 **Can a seemingly random salt-and-pepper cortex be the product of
 self-organisation?** The [complete demo notebook](./demo_microdomains/github_self_organisation_demo.ipynb)
@@ -27,7 +27,7 @@ activity in the **LGN**, which projects to a recurrent sheet representing
 **V1 layer 4**.
 
 <p align="center">
-  <img src="./demo_microdomains/demo_assets/microdomain/micro_gcal_architecture.png" width="65%" alt="Micro-GCAL architecture with LGN input, a recurrent V1 sheet, short-range excitation, longer-range inhibition, and cross-domain excitation">
+  <img src="./demo_microdomains/demo_assets/microdomain/micro_gcal_architecture.png" width="39%" alt="Micro-GCAL architecture with LGN input, a recurrent V1 sheet, short-range excitation, longer-range inhibition, and cross-domain excitation">
 </p>
 
 Each cortical neuron combines four inputs:
