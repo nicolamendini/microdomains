@@ -89,9 +89,7 @@ small, but they are already exchanging phone numbers.
 
 ### 4. Can it remember a face? 🙂
 
-A fixed synthetic face makes reconstruction progress easy to see. The new
-final panel keeps our cheerful volunteer honest by tracking average fidelity
-over the full held-out evaluation set, rather than reporting the face alone.
+A fixed synthetic face makes reconstruction progress easy to see.
 
 <p align="center">
   <img src="./demo_microdomains/demo_assets/microdomain/synthetic_learning.gif" width="85%" alt="Tracked synthetic-face activity and reconstruction">
@@ -156,8 +154,7 @@ their smooth inferred counterparts, and the resulting displacement
 distributions. The second makes the geometry tangible for 20 fixed example
 neurons per field. Each coloured dot is a soma, its black × is the closest
 same-orientation point on the inferred map, and the connecting segment is the
-estimated displacement. These links visualise the calculation; they should not
-be read as reconstructed developmental trajectories.
+estimated displacement. These links visualise the calculation
 
 <p align="center">
   <img src="./demo_microdomains/demo_assets/microdomain/macaque_displacement_links.png" width="90%" alt="Example macaque soma-to-map orientation correspondences">
