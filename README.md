@@ -6,12 +6,12 @@ This study uses a self-organising model of cortical map development to show how 
 
 [Read the preprint](./self_organisation_without_macroscopic_patterning_preprint.pdf)
 
-## Cortical microdomain self-organisation demo 🧠
+## Cortical microdomain self-organisation demo
 
 **Can a seemingly random salt-and-pepper cortex be the product of
 self-organisation?** The [complete demo notebook](./demo_microdomains/github_self_organisation_demo.ipynb)
 starts from a slightly more playful version of the question: what if the map
-is not missing, but hiding? 🧂 It follows a 100 × 100 V1 sheet through two
+is not missing, but hiding? It follows a 100 × 100 V1 sheet through two
 epochs of natural-image learning. The model builds an orderly fabric of tiny,
 interconnected domains; modest neuronal displacement then makes that structure
 look random without destroying what the network learned.
@@ -32,7 +32,7 @@ can produce structure that later *looks* random.
 Reusable collection and plotting code lives
 in the accompanying [`demo_microdomains`](./demo_microdomains/) folder.
 
-### 1. Meet micro-GCAL: local competition, distant cooperation 🤝
+### 1. Meet micro-GCAL: local competition, distant cooperation
 
 Before the learning begins, let's introduce the model itself! Read it from
 the bottom up: a visual stimulus is converted into sparse, contrast-normalised
@@ -64,7 +64,7 @@ competition, then selective cooperation again at the longest scale. The first
 two interactions keep individual domains small; CDE connects them with learned
 bridges and stabilises their recurrent responses. The result is **many tiny,
 coupled domains**—not one large smooth domain, and not a collection of
-independent random neurons. 🏝️
+independent random neurons.
 
 For every stimulus, activity is updated recurrently until it settles. Hebbian
 plasticity then strengthens co-active afferent and recurrent connections,
@@ -72,7 +72,7 @@ while adaptive thresholds and gain control keep activity sparse and balance
 feedforward with recurrent drive. Repeating this settle–learn cycle jointly
 shapes receptive fields, connectivity, and the cortical map.
 
-### 2. Give the cortex something to look at 👀
+### 2. Give the cortex something to look at
 
 Natural-image patches pass through an LGN-like contrast filter and gain
 control. V1 receives sparse edges and textures, with no orientation labels and
@@ -84,7 +84,7 @@ emphasise local light–dark boundaries and normalise their contrast.
   <img src="./demo_microdomains/demo_assets/microdomain/lgn_inputs.png" width="100%" alt="Natural-image LGN inputs and summary statistics">
 </p>
 
-### 3. Let the neurons negotiate 💡
+### 3. Let the neurons negotiate
 
 Each input starts a brief recurrent conversation: excite, inhibit, settle,
 learn, repeat. Tiny orientation domains gradually appear. The Fourier ring
@@ -115,7 +115,7 @@ excitatory links.
   <img src="./demo_microdomains/demo_assets/microdomain/weight_learning.gif" width="70%" alt="Animation of afferent and lateral plasticity">
 </p>
 
-### 4. Can it remember a face? 🙂
+### 4. Can it remember a face?
 
 A fixed synthetic face makes reconstruction progress easy to see. A decoder
 tries to rebuild the input using only the V1 population activity. The final
@@ -139,7 +139,7 @@ the number required to explain 95% of the variance.
   <img src="./demo_microdomains/demo_assets/microdomain/dimensionality.gif" width="100%" alt="Animation of PCA geometry and effective dimensionality">
 </p>
 
-Next we give the recurrent dynamics a noisy day ⚡. A matched perturbation at
+Next we give the recurrent dynamics a noisy day. A matched perturbation at
 every snapshot shows that selective interaction helps the population return
 to nearly the same answer.
 
@@ -151,7 +151,7 @@ point in exactly the same direction, and falls as noise changes the response.
   <img src="./demo_microdomains/demo_assets/microdomain/robustness.gif" width="100%" alt="Animation of response robustness to noise">
 </p>
 
-### 5. Shake the seating plan 🌀
+### 5. Shake the seating plan
 
 **Experiment 1 — a controlled shuffle.** After learning is complete, we move
 each model neuron with a one-to-one, seeded Gaussian permutation whose mean
@@ -200,7 +200,7 @@ estimated displacement. These links visualise the calculation
   <img src="./demo_microdomains/demo_assets/microdomain/macaque_displacement_links.png" width="90%" alt="Example macaque soma-to-map orientation correspondences">
 </p>
 
-### 6. Leave the sheet and find the hidden shape ✨
+### 6. Leave the sheet and find the hidden shape
 
 Displacement hides structure on the cortical sheet, but it does not scramble
 the learned responses. Rotating UMAPs of gratings, topographic-model activity,
@@ -225,7 +225,7 @@ sample before rotation, so the animation changes the viewpoint—not the labels.
   <img src="./demo_microdomains/demo_assets/microdomain/rotating_umap.gif" width="100%" alt="Rotating four-panel UMAP comparison">
 </p>
 
-### Take-home idea 🏡
+### Take-home idea
 
 Salt-and-pepper need not mean structureless. It may mean **beautifully
 organised, then very lightly shuffled**—with selective connectivity, robust
