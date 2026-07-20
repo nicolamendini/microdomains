@@ -417,7 +417,7 @@ def animate_map_learning(
     n_animation_frames: int = 25,
     interval: int = 350,
 ) -> animation.FuncAnimation:
-    """Orientation, horizontal retinotopy, zoomed fishnet, and Fourier ring."""
+    """Orientation, Fourier ring, horizontal retinotopy, and zoomed fishnet."""
 
     indices = archive.sampled_frame_indices(n_animation_frames)
     size = int(archive.manifest["config"]["sheet_size"])
@@ -440,10 +440,10 @@ def animate_map_learning(
     )
     orientation_colourbar.set_ticks((0, math.pi / 2, math.pi), labels=("0", "π/2", "π"))
     _add_colorbar(
-        fig, axes[1], plt.get_cmap("hsv"), retinotopy_norm, "retinotopic x-position (pixels)"
+        fig, axes[2], plt.get_cmap("hsv"), retinotopy_norm, "retinotopic x-position (pixels)"
     )
     _add_colorbar(
-        fig, axes[3], plt.get_cmap("Greys"), fourier_norm, "log(1 + Fourier power)"
+        fig, axes[1], plt.get_cmap("Greys"), fourier_norm, "log(1 + Fourier power)"
     )
 
     def update(position: int):
@@ -454,25 +454,25 @@ def animate_map_learning(
         axes[0].set_title("Learned orientation preference")
         _image_axis(axes[0])
 
-        retinotopy = frame["retinotopy_xy_pixels"].float()
         axes[1].imshow(
-            retinotopy[:, 0].reshape(size, size), cmap="hsv", norm=retinotopy_norm
-        )
-        axes[1].set_title("Horizontal retinotopy")
-        _image_axis(axes[1])
-
-        _draw_fishnet(axes[2], retinotopy, size)
-        axes[2].set_title("Zoomed retinotopic fishnet")
-
-        axes[3].imshow(
             torch.log1p(frame["fourier_spectrum"].float()),
             cmap="Greys",
             norm=fourier_norm,
         )
-        axes[3].set_title(
+        axes[1].set_title(
             f"Orientation Fourier power · period={frame['fourier_period_pixels']:.1f} px"
         )
-        _image_axis(axes[3])
+        _image_axis(axes[1])
+
+        retinotopy = frame["retinotopy_xy_pixels"].float()
+        axes[2].imshow(
+            retinotopy[:, 0].reshape(size, size), cmap="hsv", norm=retinotopy_norm
+        )
+        axes[2].set_title("Horizontal retinotopy")
+        _image_axis(axes[2])
+
+        _draw_fishnet(axes[3], retinotopy, size)
+        axes[3].set_title("Zoomed retinotopic fishnet")
         fig.suptitle(
             f"Map formation · epoch {archive.epoch_at(frame):.2f} · snapshot {indices[position]:02d}"
         )
@@ -798,7 +798,7 @@ def animate_synthetic_learning(
     n_animation_frames: int = 25,
     interval: int = 350,
 ) -> animation.FuncAnimation:
-    """Genuinely tracked face input, activity, and reconstruction through learning."""
+    """Tracked face probe plus average held-out reconstruction fidelity."""
 
     indices = archive.sampled_frame_indices(n_animation_frames)
     # ``synthetic_final`` is retained only for compatibility with the first
@@ -806,9 +806,17 @@ def animate_synthetic_learning(
     del synthetic_final
     fig, axes = plt.subplots(
         1,
-        3,
-        figsize=(3 * README_PANEL_WIDTH, README_ROW_HEIGHT),
+        4,
+        figsize=(4 * README_PANEL_WIDTH, README_ROW_HEIGHT),
         constrained_layout=True,
+        gridspec_kw={"width_ratios": (1, 1, 1, 1.2), "wspace": 0.16},
+    )
+    summaries = archive.manifest["frames"]
+    fidelity_epochs = np.asarray(
+        [item["seen"] / archive.dataset_size for item in summaries]
+    )
+    mean_fidelity = np.asarray(
+        [item["reconstruction_cosine_mean"] for item in summaries]
     )
     face_input = archive.representative["tracked_inputs"]["smiley_face"][0].float()
     grey_cmap = plt.get_cmap("Greys")
@@ -829,7 +837,7 @@ def animate_synthetic_learning(
         image_norm,
         "LGN input / reconstruction activity",
     )
-    _add_colorbar(fig, axes[1], grey_cmap, activity_norm, "L4 activity")
+    _add_colorbar(fig, axes[1], grey_cmap, activity_norm, "V1 activity")
 
     def update(position: int):
         frame = archive.frame(indices[position])
@@ -842,11 +850,47 @@ def animate_synthetic_learning(
         axes[1].imshow(face_activity, cmap=grey_cmap, norm=activity_norm)
         axes[2].imshow(face_reco, cmap=grey_cmap, norm=image_norm)
         axes[0].set_title("Face input")
-        axes[1].set_title(f"L4 activity · mean={face_activity.mean():.3f}")
+        axes[1].set_title(f"V1 activity · mean={face_activity.mean():.3f}")
         axes[2].set_title(f"Reconstruction · cosine={face_score:.3f}")
-        for axis in axes:
+        for axis in axes[:3]:
             _image_axis(axis)
-        fig.suptitle(f"Synthetic probes · learning epoch {archive.epoch_at(frame):.2f}")
+
+        curve_axis = axes[3]
+        frame_index = indices[position]
+        curve_axis.plot(
+            fidelity_epochs[: frame_index + 1],
+            mean_fidelity[: frame_index + 1],
+            color="black",
+            linewidth=2.5,
+        )
+        curve_axis.scatter(
+            fidelity_epochs[frame_index],
+            mean_fidelity[frame_index],
+            color="black",
+            zorder=3,
+        )
+        curve_axis.text(
+            0.97,
+            0.08,
+            f"mean cosine={mean_fidelity[frame_index]:.3f}",
+            ha="right",
+            va="bottom",
+            transform=curve_axis.transAxes,
+            fontsize=DEMO_FONT_SIZE,
+        )
+        curve_axis.set_xlabel("training epoch")
+        curve_axis.set_ylabel("mean cosine similarity")
+        curve_axis.set_xlim(float(fidelity_epochs.min()), float(fidelity_epochs.max()))
+        fidelity_padding = max(0.02, 0.08 * float(np.ptp(mean_fidelity)))
+        curve_axis.set_ylim(
+            max(0.0, float(mean_fidelity.min()) - fidelity_padding),
+            min(1.0, float(mean_fidelity.max()) + fidelity_padding),
+        )
+        curve_axis.set_title("Average reconstruction fidelity")
+        _style_axis(curve_axis)
+        fig.suptitle(
+            f"Reconstruction fidelity · learning epoch {archive.epoch_at(frame):.2f}"
+        )
         _apply_demo_typography(fig, fig.axes)
         return []
 
@@ -1010,7 +1054,7 @@ def animate_robustness_learning(
     activity_norm = Normalize(0, max(activity_vmax, 1e-12))
     _add_colorbar(fig, axes[0], grey_cmap, input_norm, "LGN input activity")
     _add_colorbar(
-        fig, list(axes[1:3]), grey_cmap, activity_norm, "L4 activity"
+        fig, list(axes[1:3]), grey_cmap, activity_norm, "V1 activity"
     )
 
     def update(position: int):
