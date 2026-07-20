@@ -182,8 +182,7 @@ in complex form, using a 100 µm spatial scale and leave-one-out prediction at
 each soma. We then measure the shortest exact distance to the contour on which
 that smooth map predicts the neuron's preferred orientation. Points beyond
 350 µm remain visible in the scatter but are excluded from the displayed means
-and correspondence links. This is a model-based displacement proxy—not a
-literal measurement of neurons migrating during development.
+and correspondence links.
 
 <p align="center">
   <img src="./demo_microdomains/demo_assets/microdomain/macaque_displacement_summary.png" width="90%" alt="Macaque V1 cellular measurements and smoothed orientation maps">
