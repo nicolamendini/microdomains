@@ -19,11 +19,9 @@ The folder contains all presentation assets and compact external-analysis data:
   from the public [Chen et al. macaque V1 dataset](https://doi.org/10.5281/zenodo.20053907)
   and the derived displacement summaries;
 - `data/umap/`: copied topographic/salt-and-pepper response tensors and the
-  compact four-panel UMAP cache, using high-arousal trials from
+  compact four-panel UMAP cache, using selected high-population-activity trials from
   [Stringer recording 1](https://doi.org/10.25378/janelia.8279387.v3) only.
 
-The multi-gigabyte trained snapshot archive and natural-image corpus remain in
-the repository-level `data_l4/` and `input_stimuli/` directories rather than
-being duplicated. The shared helper resolves those paths from its own location,
-so the notebook works whether Jupyter starts in this folder or at repository
-root.
+The multi-gigabyte trained snapshot archive and natural-image corpus are not
+distributed; provide `input_stimuli/` at repository root to rerun training.
+The shared helper resolves repository-level paths from its own location.

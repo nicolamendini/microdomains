@@ -6,6 +6,10 @@ This study uses a self-organising model of cortical map development to show how 
 
 [Read the preprint](./self_organisation_without_macroscopic_patterning_preprint.pdf)
 
+To reproduce the numerical panels, follow
+[`PAPER_REPRODUCIBILITY.md`](./PAPER_REPRODUCIBILITY.md), then open
+[`paper_panels.ipynb`](./paper_panels.ipynb).
+
 ## Cortical microdomain self-organisation demo
 
 **Can a seemingly random salt-and-pepper cortex be the product of
@@ -119,7 +123,7 @@ excitatory links.
 
 A fixed synthetic face makes reconstruction progress easy to see. A decoder
 tries to rebuild the input using only the V1 population activity. The final
-curve averages reconstruction similarity over the full held-out set: higher
+curve averages reconstruction similarity over the fixed evaluation set: higher
 cosine similarity means the cortical code preserves more of the input.
 
 <p align="center">
@@ -202,8 +206,8 @@ estimated displacement. These links visualise the calculation
 ### 6. Leave the sheet and find the hidden shape
 
 Displacement hides structure on the cortical sheet, but it does not scramble
-the learned responses. Rotating UMAPs of gratings, topographic-model activity,
-salt-and-pepper-model activity, and high-arousal mouse V1 data bring the order
+the learned responses. Rotating UMAPs of gratings, macro-GCAL activity,
+micro-GCAL activity, and selected high-population-activity mouse V1 data bring the order
 back into view as smooth, folded response geometries. The map may disappear
 from cortical space while its shape survives in the code.
 
@@ -215,7 +219,7 @@ activity—even when the neurons no longer form an obvious map on the sheet.
 From left to right, the panels provide a stimulus baseline, the topographic
 simulation, the salt-and-pepper simulation, and recorded mouse V1 activity.
 
-The mouse comparison uses the 1,916 high-arousal trials from recording 1 of the
+The mouse comparison uses the 1,916 selected high-population-activity trials from recording 1 of the
 [Stringer et al. public dataset](https://doi.org/10.25378/janelia.8279387.v3)
 ([paper](https://doi.org/10.1038/s41586-019-1346-5)). Colours are fixed to each
 sample before rotation, so the animation changes the viewpoint—not the labels.
