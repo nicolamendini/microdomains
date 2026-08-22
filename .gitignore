@@ -1,0 +1,57 @@
+# Track only source-like files in the repository root plus helper modules.
+*
+!*/
+
+!/.gitignore
+!/README.md
+!/AGENTS.md
+!/PAPER_REPRODUCIBILITY.md
+!/requirements-paper.txt
+!/*.py
+!/*.ipynb
+
+!/helpers/
+!/helpers/*.py
+
+!/demo_microdomains/
+!/demo_microdomains/**
+
+# Small rendered assets required by the GitHub-facing demo notebook.
+!/demo_assets/
+!/demo_assets/**
+
+# Generated outputs, datasets, and exploratory side projects.
+/audio/**
+/data_l3/**
+/data_l4/**
+/figures/**
+/logs/**
+/parameter_search_data/**
+/run_status/**
+
+/input_stimuli/**
+/input_stimuli_*/**
+/input_stimuli_triangle/**
+/imagenet-mini/**
+/imagenet_mini/**
+/brain_observatory_cache/**
+/path/**
+
+# Python/Jupyter/runtime noise.
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Large or transient tensors/checkpoints.
+*.pt
+*.pth
+*.ckpt
+*.lprof
+!/demo_microdomains/data/umap/*.pt
+
+# Local single-file sweep diagnostics; deliberately not part of paper code.
+/build_readable_standalone.py
+/neuralsheet_accdim_noise_readable.py

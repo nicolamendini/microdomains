@@ -1,0 +1,9 @@
+{
+  "core_outputs": {
+    "accdim": "paper_results/display_accdim.pt",
+    "noise_sp": "paper_results/display_noise_sp.pt",
+    "noise_topo": "data_l4/data_noise_topo_3reps_12trials_parallel.pt",
+    "figure_directory": "figures"
+  },
+  "panel_data": "paper_results/paper_panel_data.pt"
+}
